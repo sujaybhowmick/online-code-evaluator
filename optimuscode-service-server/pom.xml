@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>expertus-main</artifactId>
-        <groupId>com.expertus</groupId>
+        <artifactId>optimuscode-main</artifactId>
+        <groupId>com.optimuscode</groupId>
         <version>0.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -29,13 +29,13 @@
             <version>9.1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.expertus</groupId>
-            <artifactId>expertus-thrift-api</artifactId>
+            <groupId>com.optimuscode</groupId>
+            <artifactId>optimuscode-service-api</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.expertus</groupId>
-            <artifactId>expertus-thrift-commons</artifactId>
+            <groupId>com.optimuscode</groupId>
+            <artifactId>optimuscode-service-commons</artifactId>
             <version>0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
