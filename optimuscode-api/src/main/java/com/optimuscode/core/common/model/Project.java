@@ -222,6 +222,10 @@ public abstract class Project{
         this.unit = unit;
     }
 
+    public CompilationUnit getUnit(){
+        return this.unit;
+    }
+
     public String getSourceFolder() {
         return sourceFolder;
     }
