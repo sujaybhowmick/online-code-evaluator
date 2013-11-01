@@ -1,0 +1,31 @@
+import static junit.framework.Assert.*;
+import junit.framework.TestCase;
+import org.junit.Test;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author sujay
+ */
+public class ThreadCreateFileTest extends TestCase{
+    
+    public void testDummy(){
+        ThreadCreateFile instance = new ThreadCreateFile();
+        assertNotNull(instance);    
+    }
+   
+    public void testCreateThread(){
+        ThreadCreateFile instance = new ThreadCreateFile();
+        try{
+            instance.createThread();
+            fail("Test Failed, thread created");
+        }catch(Exception e){
+            e.printStackTrace();
+           fail();
+        }
+    }
+}

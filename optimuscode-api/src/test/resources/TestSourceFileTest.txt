@@ -1,0 +1,26 @@
+package com.abc;
+import static junit.framework.Assert.*;
+import junit.framework.TestCase;
+import org.junit.Test;
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ *
+ * @author sujay
+ */
+public class TestSourceFileTest extends TestCase{
+    
+   
+    public void testAdd(){
+        assertEquals(3, TestSourceFile.add(1, 2));        
+    }
+
+    public void testSubtract(){
+        TestSourceFile instance = new TestSourceFile();
+        assertEquals(new Integer(3), instance.subtract(new Integer(2),new Integer(2)));
+    }
+}

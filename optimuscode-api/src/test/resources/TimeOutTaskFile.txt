@@ -1,0 +1,10 @@
+/**
+*
+* This System.exit(1) test;
+*/
+public class TimeOutTaskFile{
+    public static void startTimeout() throws Exception{
+        // TODO
+        System.exit(1);
+    }
+}

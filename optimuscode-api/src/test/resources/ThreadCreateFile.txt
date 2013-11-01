@@ -1,0 +1,12 @@
+
+
+public class ThreadCreateFile implements Runnable{
+    public void createThread() throws Exception{
+        Thread t = new Thread(this);
+        t.start();
+    }
+
+    public void run(){
+        System.out.println("Thread created");
+    }
+}
