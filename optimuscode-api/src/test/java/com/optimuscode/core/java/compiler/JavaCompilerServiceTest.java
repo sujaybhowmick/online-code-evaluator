@@ -42,10 +42,7 @@ public class JavaCompilerServiceTest {
     @Before
     public void setUp() {
         project = JavaProject.create("session1", CommonUtils.generateUUID(),
-                JavaCompilerServiceImpl.create(),
-                GradleTestRunnerService.create(),
-                new MetricsServiceImpl(),
-                "/home/sbhowmick/tmp/");
+                    "/home/sbhowmick/tmp/");
     }
     
     @After

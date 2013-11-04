@@ -119,4 +119,9 @@ public class GradleTestRunnerService implements TestRunnerService{
               "-XX:MaxPermSize=" + DEFAULT_MaxPermSize
         };
     }
+
+    @Override
+    public void setTestRunnerListener(TestRunnerListener testRunnerListener) {
+        this.testRunnerListener = testRunnerListener;
+    }
 }

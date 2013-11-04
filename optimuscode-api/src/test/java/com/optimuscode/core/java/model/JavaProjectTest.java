@@ -44,8 +44,7 @@ public class JavaProjectTest {
             CompilationUnit unit = new CompilationUnit(this);
             unit.addSource(className, fileContents);
             project = JavaProject.create("session1",
-                    CommonUtils.generateUUID(), compilerService, testRunner,
-                    metricsService,"/home/sbhowmick/tmp/");
+                    CommonUtils.generateUUID(), "/home/sbhowmick/tmp/");
             project.setTestClassName(className);
             project.setUnit(unit);
             project.open();

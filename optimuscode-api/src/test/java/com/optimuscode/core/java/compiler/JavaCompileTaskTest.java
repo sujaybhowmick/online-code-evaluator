@@ -21,10 +21,7 @@ public class JavaCompileTaskTest {
     @Before
     public void setUp() throws Exception {
         project = JavaProject.create("session1", CommonUtils.generateUUID(),
-                JavaCompilerServiceImpl.create(),
-                GradleTestRunnerService.create(),
-                new MetricsServiceImpl(),
-                "/home/sbhowmick/tmp/");
+                                        "/home/sbhowmick/tmp/");
     }
 
     @After

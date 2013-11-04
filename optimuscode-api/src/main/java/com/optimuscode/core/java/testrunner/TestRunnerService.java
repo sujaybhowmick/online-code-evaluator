@@ -14,4 +14,6 @@ public interface TestRunnerService {
     void runTest(Project project);
 
     TestRunnerListener getTestRunnerListener();
+
+    void setTestRunnerListener(TestRunnerListener testRunnerListener);
 }

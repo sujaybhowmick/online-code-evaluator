@@ -43,9 +43,6 @@ public abstract class Project{
     private ProjectEvent event;
 
     public Project(final String projectName, final String projectId,
-                   final CompilerService compilerService,
-                   final TestRunnerService testRunnerService,
-                   final MetricsService metricsService,
                    final String... baseFolder) {
 
         this.projectName = projectName;

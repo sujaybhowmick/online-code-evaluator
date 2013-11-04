@@ -8,22 +8,14 @@ import com.optimuscode.core.java.testrunner.TestRunnerService;
 public class JavaProject extends Project {
 
     private JavaProject(final String projectName, final String projectId,
-                        final CompilerService compilerService,
-                        final TestRunnerService testRunnerService,
-                        final MetricsService metricsService,
                         final String... baseFolder){
-        super(projectName, projectId, compilerService,
-                testRunnerService, metricsService, baseFolder);
+        super(projectName, projectId, baseFolder);
     }
 
     public static Project create(final String projectName,
                                  final String projectId,
-                                 final CompilerService compilerService,
-                                 final TestRunnerService testRunnerService,
-                                 final MetricsService metricsService,
                                  final String... baseFolder){
-        Project project = new JavaProject(projectName, projectId,
-                compilerService, testRunnerService, metricsService,baseFolder);
+        Project project = new JavaProject(projectName, projectId, baseFolder);
         return project;
     }
 }
