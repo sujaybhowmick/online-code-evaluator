@@ -12,7 +12,7 @@ public class DefaultTestRunnerListener implements TestRunnerListener{
 
     @Override
     public void notify(TestSuiteResultNode testSuiteResultNode) {
-        log.info("Notified of compilation");
+        log.info("Notified of TestRun");
         this.testSuiteResultNode = testSuiteResultNode;
     }
 

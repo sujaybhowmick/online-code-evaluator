@@ -10,6 +10,7 @@
         <module>optimuscode-service-commons</module>
         <module>optimuscode-service-client</module>
         <module>optimuscode-service-server</module>
+        <module>optimuscode-ranking-api</module>
     </modules>
     <packaging>pom</packaging>
   <name>optimuscode-main</name>

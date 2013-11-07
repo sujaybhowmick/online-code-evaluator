@@ -14,11 +14,21 @@
     <dependencies>
         <dependency>
             <groupId>com.twitter</groupId>
-            <artifactId>scrooge-runtime_2.10</artifactId>
-            <version>3.1.1</version>
+            <artifactId>scrooge-runtime</artifactId>
+            <version>3.9.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.thrift</groupId>
+                    <artifactId>libthrift</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.thrift</groupId>
+            <artifactId>libthrift</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>

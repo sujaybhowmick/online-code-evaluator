@@ -43,6 +43,7 @@ public class GradleTestRunnerService implements TestRunnerService{
         if(project == null){
             throw new RuntimeException("Should have project to run");
         }
+        project.reOpen();
         if(this.testRunnerListener == null){
             this.testRunnerListener = new DefaultTestRunnerListener();
         }

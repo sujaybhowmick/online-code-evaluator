@@ -58,9 +58,12 @@ public abstract class Project{
 
     public void open(){
         event = new ProjectEvent(this);
-
         createProjectFolder().createBuildFolder().
                 createClassesFolder().createClassesTestFolder();
+    }
+
+    public void reOpen(){
+        open();
     }
 
 
@@ -71,6 +74,7 @@ public abstract class Project{
                     fsManager.resolveFile(baseFolder + File.separatorChar +
                             getProjectId());
             exists = projectFolder.exists();
+            System.out.println(getProjectId());
             if (!exists) {
                 projectFolder.createFolder();
                 folderPath = projectFolder.getURL().getPath();
