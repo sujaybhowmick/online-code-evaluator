@@ -1,0 +1,9 @@
+ZOOKEEPER_INSTALL=$HOME/tools/zookeeper-3.4.5
+
+export ZOOKEEPER_INSTALL
+
+ZOOCFGDIR=$HOME/.zookeeper/conf
+
+export ZOOCFGDIR
+
+PATH=$PATH:$ZOOKEEPER_INSTALL/bin
