@@ -2,6 +2,7 @@ package com.optimuscode.thrift.commons;
 
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
@@ -60,7 +61,8 @@ public class ConfigurationManager {
             throws FileNotFoundException {
         //InputStream in = getClass().getResourceAsStream(env + "-" + configFile);
         InputStream in = getClass().getClassLoader().
-                            getResourceAsStream(env + "-" + configFile);
+                            getResourceAsStream("conf" + File.separatorChar +
+                                    env + "-" + configFile);
         return new Yaml().loadAs(in,
                             Configuration.class);
     }
