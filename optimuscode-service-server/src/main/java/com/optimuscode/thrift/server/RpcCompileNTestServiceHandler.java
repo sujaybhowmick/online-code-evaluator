@@ -11,6 +11,10 @@ import com.optimuscode.core.java.testrunner.GradleTestRunnerService;
 import com.optimuscode.core.java.testrunner.TestRunnerService;
 import com.optimuscode.thrift.api.*;
 import com.twitter.util.Future;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ResourceBundle;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,12 +25,17 @@ import com.twitter.util.Future;
  */
 public class RpcCompileNTestServiceHandler implements
                                     RpcCompileNTestService.FutureIface {
+    protected Logger log =
+                LoggerFactory.getLogger(RpcCompileNTestServiceHandler.class);
+
     private String msg;
+
     public RpcCompileNTestServiceHandler(final String msg){
         this.msg = msg;
     }
     @Override
     public Future<CompilerResult> compile(Session session, SourceUnit unit) {
+        log.info("Compiling code for session - " + session.getUuid());
         Project project = JavaProject.create(session.getUuid(),
                                             session.getUuid(),
                                             "/home/sbhowmick/tmp/");
@@ -48,10 +57,9 @@ public class RpcCompileNTestServiceHandler implements
 
     @Override
     public Future<TestResult> runTest(Session session, SourceUnit unit) {
-        System.out.println("Inside run test");
+        log.info("Running Tests for session - " + session.getUuid());
         Project project = JavaProject.create(session.getUuid(),
-                session.getUuid(),
-                "/home/sbhowmick/tmp/");
+                session.getUuid(), "");
         CompilationUnit compilationUnit = new CompilationUnit(this);
         compilationUnit.addSource(unit.getClassName(), unit.getSourceCode());
         compilationUnit.addSource(unit.getTestClassName(),
@@ -63,7 +71,7 @@ public class RpcCompileNTestServiceHandler implements
         try{
             runnerService.runTest(project);
         }catch(Exception e){
-            e.printStackTrace();
+            log.info("build exception, can be due to failed tests", e);
         }
 
         TestRunnerListener listener =
@@ -75,8 +83,5 @@ public class RpcCompileNTestServiceHandler implements
                                 successCount(listener.getSuccessCount()).
                                 runTime(listener.getRunTime()).build();
         return Future.value(testResult);
-
-
-
     }
 }
