@@ -3,35 +3,29 @@
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>bin</id>
     <formats>
-        <format>dir</format>
+        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>true</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${project.basedir}</directory>
-            <outputDirectory>server/bin/</outputDirectory>
+            <directory>${basedir}</directory>
+            <outputDirectory>bin</outputDirectory>
             <includes>
                 <include>*.sh</include>
             </includes>
         </fileSet>
-        <!--
         <fileSet>
-            <directory>${project.build.directory}/site</directory>
-            <outputDirectory>docs</outputDirectory>
-        </fileSet>
-
-        <fileSet>
-            <directory>target</directory>
-            <outputDirectory>server/lib/</outputDirectory>
+            <directory>${basedir}</directory>
+            <outputDirectory>conf</outputDirectory>
             <includes>
-                <include>*.jar</include>
+                <include>*.yml</include>
             </includes>
-        </fileSet>-->
+        </fileSet>
     </fileSets>
 
     <dependencySets>
         <dependencySet>
-            <outputDirectory>server/lib</outputDirectory>
+            <outputDirectory>lib</outputDirectory>
             <useProjectArtifact>true</useProjectArtifact>
             <unpack>false</unpack>
         </dependencySet>
@@ -46,7 +40,7 @@
                 <include>com.optimuscode:optimuscode-api</include>
             </includes>
             <binaries>
-                <outputDirectory>server/lib/</outputDirectory>
+                <outputDirectory>lib</outputDirectory>
                 <unpack>false</unpack>
             </binaries>
         </moduleSet>
