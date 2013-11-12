@@ -53,8 +53,8 @@ public class OptimusPrimeRpcServer {
         int port = Integer.parseInt(options.get("port"));
         String[] environment = {env};
 
-        Configuration conf = confMan.register("server-dev-config", config, env);
-
+        Configuration conf = confMan.register("server-config", config, env);
+        log.info("base folder - " + conf.getBasefolder());
         RpcCompileNTestServiceHandler handler =
                                    new RpcCompileNTestServiceHandler(
                                            "started handler on server:" + port);

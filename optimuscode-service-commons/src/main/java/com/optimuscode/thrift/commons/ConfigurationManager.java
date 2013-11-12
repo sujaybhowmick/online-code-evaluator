@@ -33,7 +33,7 @@ public class ConfigurationManager {
         return SINGLETON;
     }
 
-    public synchronized Configuration register(final String ctx,
+    public synchronized Configuration register(final String key,
                                       final String configFile,
                                       final String... env)
                                                             throws Exception{
@@ -46,24 +46,27 @@ public class ConfigurationManager {
         }else{
             config = load(configFile, env[0]);
         }
-        this.registry.put(ctx, config);
+        this.registry.put(key, config);
         return config;
     }
 
-    public void deRegister(final String ctx){
-        if(registry != null && registry.containsKey(ctx)){
-            registry.remove(ctx);
+    public void deRegister(final String key){
+        if(registry != null && registry.containsKey(key)){
+            registry.remove(key);
         }
     }
 
     private Configuration load(final String configFile,
                                final String env)
             throws FileNotFoundException {
-        //InputStream in = getClass().getResourceAsStream(env + "-" + configFile);
         InputStream in = getClass().getClassLoader().
                             getResourceAsStream("conf" + File.separatorChar +
                                     env + "-" + configFile);
         return new Yaml().loadAs(in,
                             Configuration.class);
+    }
+
+    public Configuration getConfig(final String key){
+        return this.registry.get(key);
     }
 }

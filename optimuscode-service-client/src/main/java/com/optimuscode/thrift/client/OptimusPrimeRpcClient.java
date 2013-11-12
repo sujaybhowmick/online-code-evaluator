@@ -31,8 +31,6 @@ import java.util.logging.Logger;
 public class OptimusPrimeRpcClient implements Client{
     org.slf4j.Logger log = LoggerFactory.getLogger(OptimusPrimeRpcClient.class);
 
-    private RpcCompileNTestService.FinagledClient client;
-
     public OptimusPrimeRpcClient(){
     }
 

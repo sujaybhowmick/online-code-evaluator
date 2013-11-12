@@ -10,6 +10,8 @@ import com.optimuscode.core.java.model.JavaProject;
 import com.optimuscode.core.java.testrunner.GradleTestRunnerService;
 import com.optimuscode.core.java.testrunner.TestRunnerService;
 import com.optimuscode.thrift.api.*;
+import com.optimuscode.thrift.commons.Configuration;
+import com.optimuscode.thrift.commons.ConfigurationManager;
 import com.twitter.util.Future;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +32,18 @@ public class RpcCompileNTestServiceHandler implements
 
     private String msg;
 
+    private ConfigurationManager mgr = ConfigurationManager.getInstance();
+
     public RpcCompileNTestServiceHandler(final String msg){
         this.msg = msg;
     }
     @Override
     public Future<CompilerResult> compile(Session session, SourceUnit unit) {
+        Configuration config = mgr.getConfig("server-config");
         log.info("Compiling code for session - " + session.getUuid());
         Project project = JavaProject.create(session.getUuid(),
                                             session.getUuid(),
-                                            "/home/sbhowmick/tmp/");
+                                            config.getBasefolder());
         CompilerService runner = JavaCompilerServiceImpl.create();
         CompilationUnit compilationUnit = new CompilationUnit(this);
         compilationUnit.addSource(unit.getClassName(), unit.getSourceCode());
@@ -57,16 +62,18 @@ public class RpcCompileNTestServiceHandler implements
 
     @Override
     public Future<TestResult> runTest(Session session, SourceUnit unit) {
+        Configuration config = mgr.getConfig("server-config");
         log.info("Running Tests for session - " + session.getUuid());
         Project project = JavaProject.create(session.getUuid(),
-                session.getUuid(), "");
+                session.getUuid(), config.getBasefolder());
         CompilationUnit compilationUnit = new CompilationUnit(this);
         compilationUnit.addSource(unit.getClassName(), unit.getSourceCode());
         compilationUnit.addSource(unit.getTestClassName(),
                                                    unit.getTestSourceCode());
         project.setTestClassName(unit.getTestClassName());
-        TestRunnerService runnerService = GradleTestRunnerService.create();
         project.setUnit(compilationUnit);
+
+        TestRunnerService runnerService = GradleTestRunnerService.create();
 
         try{
             runnerService.runTest(project);

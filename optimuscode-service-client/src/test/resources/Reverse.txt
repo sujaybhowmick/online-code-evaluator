@@ -1,0 +1,6 @@
+package com.abc;
+public class Reverse {
+    public static String reverseString(final String inputStr){
+        return "yajuS";
+    }
+}

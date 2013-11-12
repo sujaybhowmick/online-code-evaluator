@@ -109,7 +109,7 @@ public class GradleTestRunnerService implements TestRunnerService{
     private String[] prepareBuildArguments(final Project project){
         return new String[]{
                 "-b=build-" + project.getUnit().getLanguage() + "" + ".gradle",
-                "-Dtest.single=" + project.getTestClassName()
+                "-Dtest.single=" + normalizeFqcn(project.getTestClassName())
         };
     }
 
@@ -119,6 +119,16 @@ public class GradleTestRunnerService implements TestRunnerService{
               "-Xmx" + DEFAULT_Xmx,
               "-XX:MaxPermSize=" + DEFAULT_MaxPermSize
         };
+    }
+
+
+    private String normalizeFqcn(final String fqcn){
+        String normalizedFqcn = null;
+        if(fqcn != null){
+            normalizedFqcn = fqcn.replace(".", "/");
+        }
+        return normalizedFqcn;
+
     }
 
     @Override
