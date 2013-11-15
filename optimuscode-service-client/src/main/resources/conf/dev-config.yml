@@ -1,1 +1,3 @@
 basefolder: /home/devops1/tmp/
+hosts:
+  - 162.243.92.156

@@ -1,6 +1,8 @@
 package com.optimuscode.thrift.commons;
 
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  * User: sujay
@@ -11,6 +13,7 @@ package com.optimuscode.thrift.commons;
 public class Configuration {
 
     private String basefolder;
+    private List<String> hosts;
 
 
     public Configuration(){
@@ -25,4 +28,12 @@ public class Configuration {
         this.basefolder = basefolder;
     }
 
+
+    public List<String> getHosts() {
+        return hosts;
+    }
+
+    public void setHosts(List<String> hosts) {
+        this.hosts = hosts;
+    }
 }

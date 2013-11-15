@@ -37,6 +37,16 @@ public class RpcCompileNTestServiceHandler implements
     public RpcCompileNTestServiceHandler(final String msg){
         this.msg = msg;
     }
+
+    @Override
+    public Future<String> echo(String msg) {
+        if(msg != null && msg.length() > 0){
+            log.info("echoing incoming message..." + msg);
+            return Future.value("echoed message:" + msg);
+        }
+        return Future.value("INFO: null or 0 length message");
+    }
+
     @Override
     public Future<CompilerResult> compile(Session session, SourceUnit unit) {
         Configuration config = mgr.getConfig("server-config");

@@ -30,6 +30,11 @@ import java.util.logging.Logger;
 public class OptimusPrimeRpcServer {
    private static org.slf4j.Logger log =
                         LoggerFactory.getLogger(OptimusPrimeRpcServer.class);
+    private static final String SERVER_CFG = "server-config";
+    private static final String CMD_ENV_ARG = "env";
+    private static final String CMD_CONFIG_ARG = "config";
+    private static final String CMD_HOSTIP_ARG = "host";
+    private static final String CMD_PORT_ARG = "port";
 
     private static ConfigurationManager confMan =
                                             ConfigurationManager.getInstance();
@@ -43,17 +48,18 @@ public class OptimusPrimeRpcServer {
             printHelp();
             System.exit(0);
         }
-        if(options.size() < 3){
+        if(options.size() < 4){
             printHelp();
             System.exit(0);
         }
 
-        String env = options.get("env");
-        String config = options.get("config");
-        int port = Integer.parseInt(options.get("port"));
+        String env = options.get(CMD_ENV_ARG);
+        String config = options.get(CMD_CONFIG_ARG);
+        String hostIp = options.get(CMD_HOSTIP_ARG);
+        int port = Integer.parseInt(options.get(CMD_PORT_ARG));
         String[] environment = {env};
 
-        Configuration conf = confMan.register("server-config", config, env);
+        Configuration conf = confMan.register(SERVER_CFG, config, env);
         log.info("base folder - " + conf.getBasefolder());
         RpcCompileNTestServiceHandler handler =
                                    new RpcCompileNTestServiceHandler(
@@ -67,7 +73,7 @@ public class OptimusPrimeRpcServer {
                 codec(ThriftServerFramedCodec.get()).
                 maxConcurrentRequests(50).
                 logger(Logger.getLogger("ROOT")).
-                bindTo(new InetSocketAddress(port))
+                bindTo(new InetSocketAddress(hostIp, port))
         );
 
         ClusterFactory.reportServerUpAndRunning(server,
@@ -87,7 +93,7 @@ public class OptimusPrimeRpcServer {
     static void parseOptions(String cmd, String[] args) {
         int c;
         String arg;
-        LongOpt[] longOpts = new LongOpt[3];
+        LongOpt[] longOpts = new LongOpt[4];
 
         longOpts[0] = new LongOpt("env",
                                    LongOpt.REQUIRED_ARGUMENT, null, 'e');
@@ -95,10 +101,13 @@ public class OptimusPrimeRpcServer {
         longOpts[1] = new LongOpt("config",
                                    LongOpt.REQUIRED_ARGUMENT, null, 'c');
 
-        longOpts[2] = new LongOpt("port",
+        longOpts[2] = new LongOpt("host",
+                LongOpt.REQUIRED_ARGUMENT, null, 'h');
+
+        longOpts[3] = new LongOpt("port",
                                    LongOpt.REQUIRED_ARGUMENT, null, 'p');
 
-        Getopt g = new Getopt("OptimusPrimeServer", args, "e:c:p", longOpts);
+        Getopt g = new Getopt("OptimusPrimeServer", args, "e:c:h:p", longOpts);
 
         g.setOpterr(true);
 
@@ -116,6 +125,11 @@ public class OptimusPrimeRpcServer {
                 case 'c':
                     arg = g.getOptarg();
                     options.put("config", arg);
+                    break;
+
+                case 'h':
+                    arg = g.getOptarg();
+                    options.put("host", arg);
                     break;
 
                 case 'p':
@@ -141,7 +155,8 @@ public class OptimusPrimeRpcServer {
     static void printHelp(){
         System.out.println(
              "USEAGE:com.optimuscode.thrift.server.OptimusPrimeServer" +
-             "[--env=<dev/test/prod>][--config=<dev-config.yml>][--port=<9900>]"
+             "[--env=<dev/test/prod>][--config=<dev-config.yml>]" +
+                     "[--host=<host_ip>][--port=<9900>]"
         );
     }
     static boolean isvalidEnv(final String arg){

@@ -16,4 +16,6 @@ public interface Client {
     CompilerResult compile(Session session, SourceUnit sourceUnit);
 
     TestResult runTest(Session session, SourceUnit sourceUnit);
+
+    String echo(final String msg);
 }

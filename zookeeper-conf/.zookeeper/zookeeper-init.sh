@@ -1,4 +1,4 @@
-ZOOKEEPER_INSTALL=$HOME/tools/zookeeper-3.4.5
+ZOOKEEPER_INSTALL=$HOME/zookeeper
 
 export ZOOKEEPER_INSTALL
 

@@ -34,6 +34,7 @@ struct TestResult {
 }
 
 service RpcCompileNTestService {
+    string echo(1: string msg);
     CompilerResult compile(1: Session session, 2: SourceUnit unit);
     TestResult runTest(1: Session session, 2: SourceUnit unit);
 }

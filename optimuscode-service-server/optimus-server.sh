@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-OPTIMUS_HOME="/home/sbhowmick/tmp/optimus-server"
+OPTIMUS_HOME="$HOME/optimus-server"
 OPTIMUS_ENV="dev"
 OPTIMUS_CFG_FILE="config.yml"
 OPTIMUS_PORT=$2
 OPTIMUS_LIBPATH="$OPTIMUS_HOME/lib"
 OPTIMUS_CFGPATH="$OPTIMUS_HOME/conf"
-OPTIMUS_PIDFILE="$OPTIMUS_HOME/optimus-server.pid"
+OPTIMUS_PIDFILE="$OPTIMUS_HOME/optimus-server.pid-$OPTIMUS_PORT"
+OPTIMUS_MAC_IP=`/sbin/ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`
+
 KILL=/bin/kill
 
 OPTIMUS_MAIN="com.optimuscode.thrift.server.OptimusPrimeRpcServer"
@@ -39,9 +41,10 @@ case $1 in
          exit 0
       fi
     fi
-    nohup $JAVA_HOME/bin/java -cp "$CLASSPATH" $JAVA_OPTS \
-        $OPTIMUS_MAIN --env="$OPTIMUS_ENV" --config="$OPTIMUS_CFG_FILE" --port="$OPTIMUS_PORT" \
-                    > "$OPTIMUS_DAEMON_OUT" 2>&1 < /dev/null &
+    nohup /bin/java -cp "$CLASSPATH" $JAVA_OPTS \
+        $OPTIMUS_MAIN --env="$OPTIMUS_ENV" --config="$OPTIMUS_CFG_FILE" \
+        --host="$OPTIMUS_MAC_IP" --port="$OPTIMUS_PORT" \
+        > "$OPTIMUS_DAEMON_OUT" 2>&1 < /dev/null &
     if [ $? -eq 0 ]
     then
       if /bin/echo -n $! > "$OPTIMUS_PIDFILE"
@@ -61,7 +64,7 @@ case $1 in
     echo -n "Stopping Optimus Prime server..."
     if [ ! -f "$OPTIMUS_PIDFILE" ]
     then
-      echo "no zookeeper to stop (could not find file $OPTIMUS_PIDFILE)"
+      echo "no Optimus Prime Server to stop (could not find file $OPTIMUS_PIDFILE)"
     else
       $KILL -9 $(cat "$OPTIMUS_PIDFILE")
       rm "$OPTIMUS_PIDFILE"
