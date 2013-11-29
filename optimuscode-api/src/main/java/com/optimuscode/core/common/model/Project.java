@@ -40,8 +40,6 @@ public abstract class Project{
 
     private CompilationUnit unit;
 
-    private ProjectEvent event;
-
     public Project(final String projectName, final String projectId,
                    final String... baseFolder) {
 
@@ -57,7 +55,6 @@ public abstract class Project{
 
 
     public void open(){
-        event = new ProjectEvent(this);
         createProjectFolder().createBuildFolder().
                 createClassesFolder().createClassesTestFolder();
     }
