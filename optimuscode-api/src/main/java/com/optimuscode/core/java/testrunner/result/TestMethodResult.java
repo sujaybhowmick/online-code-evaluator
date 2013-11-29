@@ -16,26 +16,20 @@
 
 package com.optimuscode.core.java.testrunner.result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestMethodResult {
-    private final long id;
-    private final String name;
-    private final TestResult.ResultType resultType;
-    private final long duration;
-    private final long endTime;
-    private final List<Throwable> exceptions;
+    private long id;
+    private String name;
+    private TestResult.ResultType resultType;
+    private long duration;
+    private long endTime;
+    private List<TestFailure> failures = new ArrayList<TestFailure>();
 
-    public TestMethodResult(long id, String name, TestResult result) {
-        this.id = id;
-        this.name = name;
-        resultType = result.getResultType();
-        duration = result.getEndTime() - result.getStartTime();
-        endTime = result.getEndTime();
-        exceptions = result.getExceptions();
-    }
 
-    public TestMethodResult(long id, String name, TestResult.ResultType resultType, long duration, long endTime, List<Throwable> exceptions) {
+    public TestMethodResult(long id, String name, TestResult.ResultType resultType,
+                            long duration, long endTime) {
         if (id < 1) {
             throw new IllegalArgumentException("id must be > 0");
         }
@@ -44,7 +38,6 @@ public class TestMethodResult {
         this.resultType = resultType;
         this.duration = duration;
         this.endTime = endTime;
-        this.exceptions = exceptions;
     }
 
     public long getId() {
@@ -55,8 +48,8 @@ public class TestMethodResult {
         return name;
     }
 
-    public List<Throwable> getExceptions() {
-        return exceptions;
+    public List<TestFailure> getFailures(){
+        return this.failures;
     }
 
     public TestResult.ResultType getResultType() {
@@ -70,4 +63,17 @@ public class TestMethodResult {
     public long getEndTime() {
         return endTime;
     }
+
+    public TestMethodResult completed(TestResult result) {
+        resultType = result.getResultType();
+        duration = result.getEndTime() - result.getStartTime();
+        endTime = result.getEndTime();
+        return this;
+    }
+
+    public TestMethodResult addFailure(String message, String stackTrace, String exceptionType) {
+        this.failures.add(new TestFailure(message, stackTrace, exceptionType));
+        return this;
+    }
+
 }
