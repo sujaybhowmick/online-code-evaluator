@@ -16,7 +16,7 @@ struct SourceUnit {
     2: string sourceCode;
     3: string testClassName;
     4: string testSourceCode;
-    5: long duration;
+    5: string language;
 }
 
 struct CompilerResult {
@@ -33,8 +33,14 @@ struct TestResult {
     6: TestMsgList testMessages;
 }
 
+struct CodeMetric {
+    1: string errorType
+    2: string metricMessage
+}
+
 service RpcCompileNTestService {
     string echo(1: string msg);
     CompilerResult compile(1: Session session, 2: SourceUnit unit);
     TestResult runTest(1: Session session, 2: SourceUnit unit);
+    map<string, list<CodeMetric>> runMetrics(1: Session session, 2: SourceUnit unit);
 }
