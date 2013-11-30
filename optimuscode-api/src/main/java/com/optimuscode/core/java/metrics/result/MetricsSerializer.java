@@ -19,13 +19,13 @@ import java.util.List;
  * Time: 9:35 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MetricSerializer {
+public class MetricsSerializer {
 
     private static final int RESULT_VERSION = 2;
 
     private final File metricsFile;
 
-    public MetricSerializer(File resultsDir) {
+    public MetricsSerializer(File resultsDir) {
         this.metricsFile = new File(resultsDir, "metrics.bin");
     }
 

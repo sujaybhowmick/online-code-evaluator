@@ -1,11 +1,12 @@
 package com.optimuscode.core.common.model;
 
-import com.optimuscode.core.common.compiler.CompilerService;
-import com.optimuscode.core.java.metrics.MetricsService;
-import com.optimuscode.core.java.testrunner.TestRunnerService;
 import org.apache.commons.vfs2.*;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 public abstract class Project{
     private String projectId;
@@ -19,8 +20,12 @@ public abstract class Project{
     private final static String BUILD_FILE_PREFIX = "build-";
     private final static String BUILD_FILE_EXT = ".gradle";
 
+    public  final static String DEFAULT_CHECKSTYLE_CONFIG = "checkstyle.xml";
+
     public static final String TEST_RESULT_DIR =
             "build/test-results/binary/test/";
+    public static final String CHECKSTYLE_RESULT_DIR =
+            "build/results/binary/checkstyle/";
 
     private boolean exists = false;
 
@@ -31,6 +36,8 @@ public abstract class Project{
     private String baseFolder;
 
     private String sourceFolder;
+
+    private String csResultFolder;
 
     private FileSystemManager fsManager;
 
@@ -71,20 +78,41 @@ public abstract class Project{
                     fsManager.resolveFile(baseFolder + File.separatorChar +
                             getProjectId());
             exists = projectFolder.exists();
-            System.out.println(getProjectId());
             if (!exists) {
                 projectFolder.createFolder();
+
+            } /*else {
                 folderPath = projectFolder.getURL().getPath();
                 this.projectFolder = folderPath;
                 copyBuildFile(projectFolder);
-            } else {
-                folderPath = projectFolder.getURL().getPath();
-                this.projectFolder = folderPath;
-                copyBuildFile(projectFolder);
-            }
+                copyCheckStyleFile(projectFolder);
+            }*/
+            folderPath = projectFolder.getURL().getPath();
+            this.projectFolder = folderPath;
+
+            copyBuildFile(projectFolder);
+            copyCheckStyleFile(projectFolder);
             createSrcFolder(projectFolder);
+            createCheckStyleResultFolder(projectFolder);
+
             return this;
         } catch (FileSystemException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void copyCheckStyleFile(FileObject projectFolder){
+        try {
+            FileObject cwd = fsManager.resolveFile(this.baseFolder);
+            FileObject src = fsManager.resolveFile(cwd,
+                                            DEFAULT_CHECKSTYLE_CONFIG);
+            FileObject destination = fsManager.resolveFile(projectFolder,
+                                                DEFAULT_CHECKSTYLE_CONFIG);
+            if (projectFolder.exists() && !destination.exists() &&
+                    projectFolder.getType() == FileType.FOLDER) {
+                destination.copyFrom(src, Selectors.SELECT_FILES);
+            }
+        }catch(FileSystemException e){
             throw new RuntimeException(e);
         }
     }
@@ -163,6 +191,18 @@ public abstract class Project{
 
     }
 
+    public Project createCheckStyleResultFolder(FileObject projectFolder){
+        try {
+            FileObject checkStyleResultFolder =
+                    fsManager.resolveFile(projectFolder,  CHECKSTYLE_RESULT_DIR);
+            checkStyleResultFolder.createFolder();
+            csResultFolder = checkStyleResultFolder.getURL().getPath();
+            return this;
+        }catch(FileSystemException e){
+            throw new RuntimeException(e);
+        }
+    }
+
     public Project createFile(final String fileName) {
         try {
             FileObject fileObject =
@@ -228,8 +268,19 @@ public abstract class Project{
         return sourceFolder;
     }
 
-
     public String getClassName() {
         return className;
+    }
+
+    public String getCsResultFolder() {
+        return csResultFolder;
+    }
+
+    public void dumpSource(){
+        final String srcDir = getSourceFolder();
+        List<SourceUnit> sources = this.unit.getSources();
+        for(SourceUnit source: sources){
+            source.write(srcDir);
+        }
     }
 }

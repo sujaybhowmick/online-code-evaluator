@@ -1,14 +1,16 @@
 package com.optimuscode.core.java.metrics;
 
 import com.optimuscode.core.java.metrics.result.Metric;
-import com.optimuscode.core.java.metrics.result.MetricSerializer;
+import com.optimuscode.core.java.metrics.result.MetricsSerializer;
 import com.optimuscode.core.java.metrics.result.MetricsResult;
 import com.puppycrawl.tools.checkstyle.api.AuditEvent;
 import com.puppycrawl.tools.checkstyle.api.AuditListener;
 import com.puppycrawl.tools.checkstyle.api.AutomaticBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +21,7 @@ import java.util.List;
  */
 public class MetricsAuditLogger extends AutomaticBean
                                             implements AuditListener{
+    protected static Logger log = LoggerFactory.getLogger(MetricsAuditLogger.class);
     private File dir;
     private MetricsResult metricsResult;
 
@@ -33,7 +36,7 @@ public class MetricsAuditLogger extends AutomaticBean
 
     @Override
     public void auditFinished(AuditEvent auditEvent) {
-        MetricSerializer serializer = new MetricSerializer(this.dir);
+        MetricsSerializer serializer = new MetricsSerializer(this.dir);
         serializer.write(this.metricsResult);
     }
 
@@ -49,9 +52,14 @@ public class MetricsAuditLogger extends AutomaticBean
 
     @Override
     public void addError(AuditEvent auditEvent) {
-        Metric metric = new Metric(auditEvent.getModuleId(),
+        String source = auditEvent.getSourceName();
+        int start = source.lastIndexOf('.') + 1;
+        int end = source.length();
+        source = source.substring(start, end);
+
+        Metric metric = new Metric(UUID.randomUUID().toString(),
                             Metric.ERROR_TYPE,
-                            auditEvent.getSourceName(),
+                            source,
                             auditEvent.getMessage());
         this.metricsResult.addMetric(metric);
     }

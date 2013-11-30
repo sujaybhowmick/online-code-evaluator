@@ -43,4 +43,39 @@ public class TestSourceFile{
         }
         return result.toString();
     }
+    private void complexMethod(){
+        boolean flag = true;
+        if(flag){
+           System.out.println("blah true");
+           flag = false;
+        }
+
+        if(flag){
+
+        }else{
+            System.out.println("blah false");
+            flag = true;
+        }
+        if(flag){
+            System.out.println("blah true");
+        }else{
+
+        }
+        if(flag){
+            System.out.println("blah true");
+            flag = false;
+        }
+
+        if(flag){
+
+        }else{
+            System.out.println("blah false");
+            flag = true;
+        }
+        if(flag){
+            System.out.println("blah true");
+        }else{
+
+        }
+    }
 }

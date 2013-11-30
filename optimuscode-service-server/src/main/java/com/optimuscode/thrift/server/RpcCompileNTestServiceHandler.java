@@ -9,6 +9,7 @@ import com.optimuscode.core.java.compiler.JavaCompilerServiceImpl;
 import com.optimuscode.core.java.model.JavaProject;
 import com.optimuscode.core.java.testrunner.GradleTestRunnerService;
 import com.optimuscode.core.java.testrunner.TestRunnerService;
+import com.optimuscode.core.utils.SupportedLanguage;
 import com.optimuscode.thrift.api.*;
 import com.optimuscode.thrift.commons.Configuration;
 import com.optimuscode.thrift.commons.ConfigurationManager;
@@ -55,7 +56,8 @@ public class RpcCompileNTestServiceHandler implements
                                             session.getUuid(),
                                             config.getBasefolder());
         CompilerService runner = JavaCompilerServiceImpl.create();
-        CompilationUnit compilationUnit = new CompilationUnit(this);
+        CompilationUnit compilationUnit = new CompilationUnit(this,
+                                                    SupportedLanguage.Java);
         compilationUnit.addSource(unit.getClassName(), unit.getSourceCode());
         compilationUnit.addSource(unit.getTestClassName(),
                                                     unit.getTestSourceCode());

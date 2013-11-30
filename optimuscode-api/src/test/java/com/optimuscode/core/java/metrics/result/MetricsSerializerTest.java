@@ -17,18 +17,18 @@ import java.util.List;
  * Time: 10:36 PM
  * To change this template use File | Settings | File Templates.
  */
-public class MetricSerializerTest {
+public class MetricsSerializerTest {
 
     static final String METRICS_FOLDER = "./optimuscode-api/src/test/resources";
 
     MetricsResult metricsResult;
 
-    MetricSerializer serializer;
+    MetricsSerializer serializer;
 
     @Before
     public void setUp(){
         this.metricsResult = new MetricsResult();
-        this.serializer = new MetricSerializer(new File(METRICS_FOLDER));
+        this.serializer = new MetricsSerializer(new File(METRICS_FOLDER));
 
     }
 

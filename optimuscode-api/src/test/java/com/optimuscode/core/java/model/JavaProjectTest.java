@@ -8,6 +8,7 @@ import com.optimuscode.core.java.metrics.MetricsService;
 import com.optimuscode.core.java.testrunner.GradleTestRunnerService;
 import com.optimuscode.core.java.testrunner.TestRunnerService;
 import com.optimuscode.core.utils.CommonUtils;
+import com.optimuscode.core.utils.SupportedLanguage;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,7 @@ public class JavaProjectTest {
             String javaFileName = "../optimuscode-api/src/test/resources/TestSourceFile.txt";
             String className = "TestSourceFile";
             String fileContents = FileUtils.fileRead(javaFileName);
-            CompilationUnit unit = new CompilationUnit(this);
+            CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
             unit.addSource(className, fileContents);
             project = JavaProject.create("session1",
                     CommonUtils.generateUUID(), "/home/sbhowmick/tmp/");

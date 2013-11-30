@@ -7,9 +7,7 @@ import com.google.common.collect.Multimaps;
 import com.optimuscode.core.java.metrics.result.Metric;
 import com.optimuscode.core.java.metrics.result.MetricsResult;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,8 +25,7 @@ public class DefaultMetricsListener implements MetricsListener {
         this.metricsResult = metricsResult;
     }
 
-    @Override
-    public Map<String, Collection<Metric>> getGroupedMetrics() {
+    private Map<String, Collection<Metric>> getGroupedMetrics() {
         List<Metric> metrics = Lists.newArrayList(metricsResult.getMetrics());
         Multimap<String, Metric> index =
                 Multimaps.index(metrics, new Function<Metric, String>() {
@@ -39,4 +36,23 @@ public class DefaultMetricsListener implements MetricsListener {
                 });
         return index.asMap();
     }
+
+    @Override
+    public Map<String, Collection<Metric>> getMetricGroups() {
+        Map<String, Collection<Metric>> groupedMetrics = getGroupedMetrics();
+        Map<String, Collection<Metric>> groups =
+                                    new HashMap<String, Collection<Metric>>();
+        List<String> availableChecks = this.metricsResult.getAvailableChecks();
+        for(String check: availableChecks){
+            Collection<Metric> metrics = groupedMetrics.get(check);
+            if(metrics == null){
+                groups.put(check, Collections.EMPTY_LIST);
+            }else{
+                groups.put(check, metrics);
+            }
+        }
+        return groups;
+    }
+
+
 }

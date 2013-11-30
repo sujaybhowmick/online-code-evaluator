@@ -1,10 +1,18 @@
 package com.optimuscode.core.common.model;
 
-import java.util.ArrayList;
-import java.util.EventObject;
-import java.util.List;
+import com.optimuscode.core.utils.SupportedLanguage;
+
+import java.util.*;
 
 public abstract class ProcessingUnit extends EventObject{
+    protected static Map<SupportedLanguage, String> sourceExtension;
+    static{
+        sourceExtension = new HashMap<SupportedLanguage, String>();
+        sourceExtension.put(SupportedLanguage.Java, ".java");
+        sourceExtension.put(SupportedLanguage.Groovy, ".groovy");
+        sourceExtension.put(SupportedLanguage.C, ".c");
+        sourceExtension.put(SupportedLanguage.Cpp, ".cpp");
+    }
 
     List<String> errors;
 
@@ -24,5 +32,9 @@ public abstract class ProcessingUnit extends EventObject{
 
     public List<String> getErrors(){
         return this.errors;
+    }
+
+    public static String getSourceExtensionFor(SupportedLanguage language){
+        return sourceExtension.get(language);
     }
 }

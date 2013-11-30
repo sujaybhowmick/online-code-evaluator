@@ -5,6 +5,7 @@ import com.optimuscode.core.java.metrics.result.MetricsResult;
 
 import java.util.Collection;
 import java.util.EventListener;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +18,6 @@ import java.util.Map;
 public interface MetricsListener extends EventListener {
     void notify(MetricsResult metricsResult);
 
-    Map<String, Collection<Metric>> getGroupedMetrics();
+    Map<String, Collection<Metric>>  getMetricGroups();
 
 }

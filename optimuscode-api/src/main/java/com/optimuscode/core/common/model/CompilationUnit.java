@@ -13,13 +13,15 @@ public class CompilationUnit extends ProcessingUnit{
 
     private SupportedLanguage language = SupportedLanguage.Java;
 
-    public CompilationUnit(Object source){
+    public CompilationUnit(Object source, SupportedLanguage language){
         super(source);
         this.sources = new ArrayList<SourceUnit>();
+        this.language = language;
     }
 
     public void addSource(final String name, final String source){
-        this.sources.add(new SourceUnit(this, name, source));
+        final String extension = sourceExtension.get(language);
+        this.sources.add(new SourceUnit(this, name, source, extension));
     }
 
     public List<SourceUnit> getSources(){
