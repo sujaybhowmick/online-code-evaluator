@@ -110,7 +110,7 @@ public class RpcCompileNTestServiceHandler implements
     public Future<Map<String, List<CodeMetric>>> runMetrics(Session session,
                                                             SourceUnit unit) {
 
-        log.info("Running Tests for session - " + session.getUuid());
+        log.info("Running metrics for session - " + session.getUuid());
 
         Project project = prepareProject(session, unit);
 
