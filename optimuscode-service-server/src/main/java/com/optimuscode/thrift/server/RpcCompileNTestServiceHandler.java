@@ -10,7 +10,7 @@ import com.optimuscode.core.java.metrics.CheckStyleService;
 import com.optimuscode.core.java.metrics.MetricsListener;
 import com.optimuscode.core.java.metrics.MetricsService;
 import com.optimuscode.core.java.metrics.result.Metric;
-import com.optimuscode.core.java.model.JavaProject;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.java.testrunner.GradleTestRunnerService;
 import com.optimuscode.core.java.testrunner.TestRunnerService;
 import com.optimuscode.core.utils.SupportedLanguage;
