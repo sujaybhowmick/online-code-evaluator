@@ -57,7 +57,6 @@ public class OptimusPrimeRpcServer {
         String config = options.get(CMD_CONFIG_ARG);
         String hostIp = options.get(CMD_HOSTIP_ARG);
         int port = Integer.parseInt(options.get(CMD_PORT_ARG));
-        String[] environment = {env};
 
         Configuration conf = confMan.register(SERVER_CFG, config, env);
         log.info("base folder - " + conf.getBasefolder());
