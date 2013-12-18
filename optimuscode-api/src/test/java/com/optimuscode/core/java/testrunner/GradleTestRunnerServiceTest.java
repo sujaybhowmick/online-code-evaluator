@@ -10,7 +10,7 @@ import com.optimuscode.core.common.model.Project;
 import com.optimuscode.core.common.compiler.CompilerService;
 import com.optimuscode.core.common.testrunner.TestRunnerListener;
 import com.optimuscode.core.java.compiler.JavaCompilerServiceImpl;
-import com.optimuscode.core.java.model.JavaProject;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.utils.CommonUtils;
 import com.optimuscode.core.utils.SupportedLanguage;
 import org.apache.commons.io.FileUtils;
@@ -55,7 +55,7 @@ public class GradleTestRunnerServiceTest {
         String fileContents1 = FileUtils.fileRead(javaFileName1);
         String fileContents2 = FileUtils.fileRead(javaFileName2);
         assertNotNull(fileContents1);
-        CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+        CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
         unit.addSource(className1, fileContents1);
         unit.addSource(className2, fileContents2);
         project.setTestClassName(className2);
@@ -97,7 +97,7 @@ public class GradleTestRunnerServiceTest {
         String fileContents1 = FileUtils.fileRead(javaFileName1);
         String fileContents2 = FileUtils.fileRead(javaFileName2);
         assertNotNull(fileContents1);
-        CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+        CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
         unit.addSource(className1, fileContents1);
         unit.addSource(className2, fileContents2);
         project.setTestClassName(className2);

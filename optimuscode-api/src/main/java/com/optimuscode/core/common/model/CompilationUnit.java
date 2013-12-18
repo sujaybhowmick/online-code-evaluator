@@ -9,32 +9,20 @@ public class CompilationUnit extends ProcessingUnit{
 
     protected List<SourceUnit> sources;
 
-    private Boolean success;
-
     private SupportedLanguage language = SupportedLanguage.Java;
 
-    public CompilationUnit(Object source, SupportedLanguage language){
-        super(source);
+    public CompilationUnit(SupportedLanguage language){
         this.sources = new ArrayList<SourceUnit>();
         this.language = language;
     }
 
     public void addSource(final String name, final String source){
         final String extension = sourceExtension.get(language);
-        this.sources.add(new SourceUnit(this, name, source, extension));
+        this.sources.add(new SourceUnit(name, source, extension));
     }
 
     public List<SourceUnit> getSources(){
         return this.sources;
-    }
-
-
-    public Boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
     }
 
 

@@ -2,6 +2,7 @@ package com.optimuscode.core.java.model;
 
 import com.optimuscode.core.common.compiler.CompilerService;
 import com.optimuscode.core.common.model.CompilationUnit;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.common.model.Project;
 import com.optimuscode.core.java.compiler.JavaCompilerServiceImpl;
 import com.optimuscode.core.java.metrics.MetricsService;
@@ -42,7 +43,7 @@ public class JavaProjectTest {
             String javaFileName = "../optimuscode-api/src/test/resources/TestSourceFile.txt";
             String className = "TestSourceFile";
             String fileContents = FileUtils.fileRead(javaFileName);
-            CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+            CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
             unit.addSource(className, fileContents);
             project = JavaProject.create("session1",
                     CommonUtils.generateUUID(), "/home/sbhowmick/tmp/");

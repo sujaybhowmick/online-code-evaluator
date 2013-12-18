@@ -1,31 +1,28 @@
 package com.optimuscode.core.common.model;
 
+import com.optimuscode.core.common.OptimusRuntimeException;
 import org.apache.commons.vfs2.*;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 
-public abstract class Project{
-    private String projectId;
-    private String projectName;
-    private final static String BUILD = "/build";
-    private final static String SRC = "src";
-    private final static String CLASSES = "/classes";
-    private final static String CLASSES_TEST = "/test";
-    private final static String DEFAULT_BASE_FOLDER = "/tmp";
-    private final static String DEFAULT_BUILD_FILE = "build.gradle";
-    private final static String BUILD_FILE_PREFIX = "build-";
-    private final static String BUILD_FILE_EXT = ".gradle";
+public abstract class Project {
+    protected String projectId;
+    protected String projectName;
+    protected final static String BUILD = "/build";
+    protected final static String SRC = "src";
+    protected final static String CLASSES = "/classes";
+    protected final static String CLASSES_TEST = "/test";
+    protected final static String DEFAULT_BASE_FOLDER = "/tmp";
+    protected final static String DEFAULT_BUILD_FILE = "build.gradle";
+    protected final static String BUILD_FILE_PREFIX = "build-";
+    protected final static String BUILD_FILE_EXT = ".gradle";
 
-    public  final static String DEFAULT_CHECKSTYLE_CONFIG = "checkstyle.xml";
+    protected  final static String DEFAULT_CHECKSTYLE_CONFIG = "checkstyle.xml";
 
     public static final String TEST_RESULT_DIR =
             "build/test-results/binary/test/";
-    public static final String CHECKSTYLE_RESULT_DIR =
-            "build/results/binary/checkstyle/";
+
 
     private boolean exists = false;
 
@@ -37,15 +34,17 @@ public abstract class Project{
 
     private String sourceFolder;
 
-    private String csResultFolder;
-
-    private FileSystemManager fsManager;
-
     private String testClassName;
 
     private String className;
 
-    private CompilationUnit unit;
+    private String buildFile;
+
+    private boolean singleTest = true;
+
+    protected CompilationUnit unit;
+
+    protected FileSystemManager fsManager;
 
     public Project(final String projectName, final String projectId,
                    final String... baseFolder) {
@@ -58,68 +57,55 @@ public abstract class Project{
         } else {
             this.baseFolder = DEFAULT_BASE_FOLDER;
         }
+        try {
+            fsManager = VFS.getManager();
+        } catch (FileSystemException e) {
+            throw new OptimusRuntimeException(e);
+        }
+
     }
 
 
     public void open(){
-        createProjectFolder().createBuildFolder().
-                createClassesFolder().createClassesTestFolder();
+        createProjectFolder().createBuildFolder().copyBuildFile().
+                createClassesFolder().createClassesTestFolder().
+                createCopyProjectFiles().createSrcFolder();
     }
+
+    protected abstract Project createCopyProjectFiles();
 
     public void reOpen(){
         open();
     }
 
 
-    public Project createProjectFolder() {
+    protected Project createProjectFolder(){
         try {
-            fsManager = VFS.getManager();
+
             FileObject projectFolder =
-                    fsManager.resolveFile(baseFolder + File.separatorChar +
+                    fsManager.resolveFile(getBaseFolder() + File.separatorChar +
                             getProjectId());
-            exists = projectFolder.exists();
+            boolean exists = projectFolder.exists();
             if (!exists) {
                 projectFolder.createFolder();
+                this.exists = true;
 
-            } /*else {
-                folderPath = projectFolder.getURL().getPath();
-                this.projectFolder = folderPath;
-                copyBuildFile(projectFolder);
-                copyCheckStyleFile(projectFolder);
-            }*/
-            folderPath = projectFolder.getURL().getPath();
-            this.projectFolder = folderPath;
-
-            copyBuildFile(projectFolder);
-            copyCheckStyleFile(projectFolder);
-            createSrcFolder(projectFolder);
-            createCheckStyleResultFolder(projectFolder);
+            }
+            setFolderPath(projectFolder.getURL().getPath());
+            setProjectFolder(projectFolder.getURL().getPath());
 
             return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
     }
 
-    private void copyCheckStyleFile(FileObject projectFolder){
-        try {
-            FileObject cwd = fsManager.resolveFile(this.baseFolder);
-            FileObject src = fsManager.resolveFile(cwd,
-                                            DEFAULT_CHECKSTYLE_CONFIG);
-            FileObject destination = fsManager.resolveFile(projectFolder,
-                                                DEFAULT_CHECKSTYLE_CONFIG);
-            if (projectFolder.exists() && !destination.exists() &&
-                    projectFolder.getType() == FileType.FOLDER) {
-                destination.copyFrom(src, Selectors.SELECT_FILES);
-            }
-        }catch(FileSystemException e){
-            throw new RuntimeException(e);
-        }
-    }
 
-    public void copyBuildFile(FileObject projectFolder) {
+    protected Project copyBuildFile() {
         String gradleBuildFile = BUILD_FILE_PREFIX + unit.getLanguage() +
                                                                 BUILD_FILE_EXT;
+        setBuildFile(gradleBuildFile);
+        FileObject projectFolder = resolveProjectFolder();
         try {
             FileObject cwd =
                     fsManager.resolveFile(this.baseFolder);
@@ -134,12 +120,13 @@ public abstract class Project{
                     projectFolder.getType() == FileType.FOLDER) {
                 destination.copyFrom(src, Selectors.SELECT_FILES);
             }
+            return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
     }
 
-    public Project createBuildFolder() {
+    protected Project createBuildFolder() {
         try {
             FileObject buildFolder =
                     fsManager.resolveFile(getFolderPath() + BUILD);
@@ -147,24 +134,26 @@ public abstract class Project{
             folderPath = buildFolder.getURL().getPath();
             return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
     }
 
-    public void createSrcFolder(FileObject projectFolder) {
+    protected Project createSrcFolder() {
         try {
+            FileObject projectFolder = resolveProjectFolder();
             FileObject srcFolder =
                     fsManager.resolveFile(projectFolder,  SRC);
             srcFolder.createFolder();
             sourceFolder = srcFolder.getURL().getPath();
+            return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
 
     }
 
 
-    public Project createClassesFolder() {
+    protected Project createClassesFolder() {
         try {
             FileObject classesFolder =
                     fsManager.resolveFile(getFolderPath() + CLASSES);
@@ -172,12 +161,12 @@ public abstract class Project{
             folderPath = classesFolder.getURL().getPath();
             return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
 
     }
 
-    public Project createClassesTestFolder() {
+    protected Project createClassesTestFolder() {
         try {
             FileObject testClassesFolder =
                     fsManager.resolveFile(getFolderPath() +
@@ -186,24 +175,14 @@ public abstract class Project{
             folderPath = testClassesFolder.getURL().getPath();
             return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
 
     }
 
-    public Project createCheckStyleResultFolder(FileObject projectFolder){
-        try {
-            FileObject checkStyleResultFolder =
-                    fsManager.resolveFile(projectFolder,  CHECKSTYLE_RESULT_DIR);
-            checkStyleResultFolder.createFolder();
-            csResultFolder = checkStyleResultFolder.getURL().getPath();
-            return this;
-        }catch(FileSystemException e){
-            throw new RuntimeException(e);
-        }
-    }
 
-    public Project createFile(final String fileName) {
+
+    protected Project createFile(final String fileName) {
         try {
             FileObject fileObject =
                     fsManager.resolveFile(getFolderPath() +
@@ -212,24 +191,8 @@ public abstract class Project{
             folderPath = fileObject.getURL().getPath();
             return this;
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
+            throw new OptimusRuntimeException(e);
         }
-    }
-
-    public String getFolderPath() {
-        return folderPath;
-    }
-
-    public String getProjectName() {
-        return projectName;
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public String getProjectFolder() {
-        return projectFolder;
     }
 
     public String getTestClassName() {
@@ -241,19 +204,76 @@ public abstract class Project{
     }
 
     public boolean exists() {
-        return exists;
+        return this.exists;
     }
 
     public void close() {
         try {
             if(this.projectFolder != null){
-                FileObject projectFolder = fsManager.resolveFile(this.projectFolder);
+                FileObject projectFolder = resolveProjectFolder();
                 projectFolder.deleteAll();
+                this.exists = false;
             }
         } catch (FileSystemException e) {
-            throw new RuntimeException(e);
-        }finally{
+            throw new OptimusRuntimeException(e);
         }
+    }
+
+
+
+    public void dumpSource(){
+        final String srcDir = getSourceFolder();
+        List<SourceUnit> sources = this.unit.getSources();
+        for(SourceUnit source: sources){
+            source.write(srcDir);
+        }
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public String getFolderPath() {
+        return folderPath;
+    }
+
+    public void setFolderPath(String folderPath) {
+        this.folderPath = folderPath;
+    }
+
+    public String getProjectId() {
+        return projectId;
+    }
+
+    public String getProjectFolder() {
+        return projectFolder;
+    }
+
+    public void setProjectFolder(String projectFolder) {
+        this.projectFolder = projectFolder;
+    }
+
+    public String getBaseFolder() {
+        return baseFolder;
+    }
+
+    public void setBaseFolder(String baseFolder) {
+        this.baseFolder = baseFolder;
+    }
+    public String getSourceFolder() {
+        return sourceFolder;
+    }
+
+    public void setSourceFolder(String sourceFolder) {
+        this.sourceFolder = sourceFolder;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public void setUnit(final CompilationUnit unit) {
@@ -264,23 +284,36 @@ public abstract class Project{
         return this.unit;
     }
 
-    public String getSourceFolder() {
-        return sourceFolder;
+    public String getBuildFile() {
+        return buildFile;
     }
 
-    public String getClassName() {
-        return className;
+    public void setBuildFile(String buildFile) {
+        this.buildFile = buildFile;
     }
 
-    public String getCsResultFolder() {
-        return csResultFolder;
+
+    public boolean isSingleTest() {
+        return singleTest;
     }
 
-    public void dumpSource(){
-        final String srcDir = getSourceFolder();
-        List<SourceUnit> sources = this.unit.getSources();
-        for(SourceUnit source: sources){
-            source.write(srcDir);
+    public void setSingleTest(boolean singleTest) {
+        this.singleTest = singleTest;
+    }
+
+    public String resolvePath(final String path){
+        try {
+            return fsManager.resolveFile(path).getURL().getPath();
+        } catch (FileSystemException e) {
+            throw new OptimusRuntimeException(e);
+        }
+    }
+
+    protected FileObject resolveProjectFolder(){
+        try {
+            return fsManager.resolveFile(getProjectFolder());
+        } catch (FileSystemException e) {
+            throw new OptimusRuntimeException(e);
         }
     }
 }

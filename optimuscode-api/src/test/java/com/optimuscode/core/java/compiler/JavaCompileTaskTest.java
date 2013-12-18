@@ -2,7 +2,7 @@ package com.optimuscode.core.java.compiler;
 
 import com.optimuscode.core.common.model.CompilationUnit;
 import com.optimuscode.core.common.model.Project;
-import com.optimuscode.core.java.model.JavaProject;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.utils.CommonUtils;
 import com.optimuscode.core.utils.SupportedLanguage;
 import org.apache.commons.io.FileUtils;
@@ -37,7 +37,7 @@ public class JavaCompileTaskTest {
         final String className2 = "TestSourceFileTest";
         String fileContents1 = FileUtils.fileRead(javaFileName1);
         String fileContents2 = FileUtils.fileRead(javaFileName2);
-        CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+        CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
         unit.addSource(className1, fileContents1);
         unit.addSource(className2, fileContents2);
         project.setTestClassName(className2);
@@ -59,7 +59,7 @@ public class JavaCompileTaskTest {
         final String classFileName = "CompileErrorTestFile";
         String fileContents = FileUtils.fileRead(javaFileName);
         assertNotNull(fileContents);
-        CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+        CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
         unit.addSource(classFileName, fileContents);
         project.setTestClassName(classFileName);
         project.setUnit(unit);

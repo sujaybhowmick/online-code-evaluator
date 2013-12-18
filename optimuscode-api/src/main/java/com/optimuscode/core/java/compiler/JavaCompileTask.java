@@ -1,5 +1,6 @@
 package com.optimuscode.core.java.compiler;
 
+import com.optimuscode.core.common.OptimusRuntimeException;
 import com.optimuscode.core.common.model.CompilationUnit;
 import com.optimuscode.core.common.model.Project;
 import com.optimuscode.core.common.model.SourceUnit;
@@ -33,7 +34,7 @@ public class JavaCompileTask implements Callable<Boolean> {
         final List<SourceUnit> sourceUnits = unit.getSources();
         if (sourceUnits == null || sourceUnits.isEmpty()) {
             log.debug("No Classes to compile");
-            throw new IllegalArgumentException("className can not be null or empty");
+            throw new IllegalArgumentException("No Java class to compile");
         }
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -75,8 +76,7 @@ public class JavaCompileTask implements Callable<Boolean> {
             try{
                 fileManager.close();
             }catch(IOException ioe){
-                ioe.printStackTrace();
-                throw new RuntimeException(ioe);
+                throw new OptimusRuntimeException(ioe);
             }
         }
     }

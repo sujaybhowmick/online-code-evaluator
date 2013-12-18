@@ -1,0 +1,40 @@
+package com.abc;
+import static junit.framework.Assert.*;
+import junit.framework.TestCase;
+import org.junit.Test;
+
+public class ReverseTest extends TestCase {
+
+    @Test(timeout=60000)
+    public void testReverse1() {
+        try {
+            String actual = Reverse.reverseString("Sujay");
+            String expected = "yajuS";
+            assertEquals(expected, actual);
+        } catch (Exception e) {
+            fail("Test failed");
+        }
+    }
+
+    @Test(timeout=60000)
+    public void testReverse2() {
+        try {
+            String actual = Reverse.reverseString("yajuS");
+            String expected = "Sujay";
+            assertEquals(expected, actual);
+        } catch (Exception e) {
+            fail("Test failed");
+        }
+    }
+
+   @Test(timeout=60000)
+    public void testReverse3() {
+        try {
+            String actual = Reverse.reverseString("Annette");
+            String expected = "ettennA";
+            assertEquals(expected, actual);
+        } catch (Exception e) {
+            fail("Test failed");
+        }
+    }
+}

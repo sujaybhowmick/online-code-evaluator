@@ -61,6 +61,7 @@ public class GradleTestRunnerService implements TestRunnerService{
             BuildLauncher launcher = connection.newBuild();
             
             launcher.forTasks("test");
+
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             launcher.setStandardOutput(outputStream);
             launcher.setStandardError(outputStream);
@@ -107,10 +108,13 @@ public class GradleTestRunnerService implements TestRunnerService{
 
 
     private String[] prepareBuildArguments(final Project project){
-        return new String[]{
-                "-b=build-" + project.getUnit().getLanguage() + "" + ".gradle",
-                "-Dtest.single=" + normalizeFqcn(project.getTestClassName())
-        };
+        if(project.isSingleTest()){
+            return new String[]{
+                    "-b=" + project.getBuildFile(),
+                    "-Dtest.single=" + normalizeFqcn(project.getTestClassName())
+            };
+        }
+        return new String[]{ "-b=" + project.getBuildFile() };
     }
 
 

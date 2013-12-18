@@ -1,6 +1,7 @@
 package com.optimuscode.core.java.metrics;
 
 import com.google.common.collect.Lists;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.common.model.Project;
 import com.optimuscode.core.java.metrics.result.MetricsResult;
 import com.optimuscode.core.java.metrics.result.MetricsSerializer;
@@ -21,7 +22,7 @@ import java.util.Properties;
  * User: sujay
  * Date: 10/14/13
  * Time: 9:08 PM
- * To change this template use File | Settings | File Templates.
+ * Uses the checkstyle api directly and not through gradle
  */
 public class CheckStyleService implements MetricsService{
 
@@ -47,11 +48,14 @@ public class CheckStyleService implements MetricsService{
         project.dumpSource();
 
         final String projectDir = project.getProjectFolder();
-        final File checkStyleResultDir = new File(project.getCsResultFolder());
+
+        final String csResultDir = project.resolvePath(projectDir +
+                        File.separatorChar + JavaProject.CHECKSTYLE_RESULT_DIR);
+        final File checkStyleResultDir = new File(csResultDir);
 
         Configuration config = loadConfig(
                 projectDir + File.separatorChar +
-                            Project.DEFAULT_CHECKSTYLE_CONFIG,
+                            JavaProject.DEFAULT_CHECKSTYLE_CONFIG,
                 System.getProperties());
 
         final AuditListener listener =
@@ -67,7 +71,7 @@ public class CheckStyleService implements MetricsService{
             Configuration[] children = configuration.getChildren();
             for(Configuration configuration1: children){
                 result.addAvailableCheck(
-                        configuration1.getName() + "Check");
+                        configuration1.getName() + "Checker");
             }
         }
         this.metricsListener.notify(result);

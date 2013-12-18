@@ -9,10 +9,9 @@ public class SourceUnit extends ProcessingUnit{
     private StringReaderSource sourceCode;
     private String extension;
 
-    public SourceUnit(final Object source, final String name,
+    public SourceUnit(final String name,
                       final String sourceCode,
                       final String extension){
-        super(source);
         this.name = name;
         this.sourceCode = new StringReaderSource(sourceCode);
         this.extension = extension;

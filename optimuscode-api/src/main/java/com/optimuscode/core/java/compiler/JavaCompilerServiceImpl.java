@@ -14,10 +14,11 @@
 
 package com.optimuscode.core.java.compiler;
 
+import com.optimuscode.core.common.OptimusRuntimeException;
 import com.optimuscode.core.common.compiler.CompilationListener;
 import com.optimuscode.core.common.compiler.CompilerService;
-import com.optimuscode.core.common.model.CompilationUnit;
 import com.optimuscode.core.common.model.Project;
+import com.optimuscode.core.common.compiler.CompileEvent;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -47,18 +48,16 @@ public final class JavaCompilerServiceImpl implements CompilerService {
         if(this.compilationListener == null){
             this.compilationListener = new DefaultCompilationListener();
         }
-        final CompilationUnit unit = project.getUnit();
         final JavaCompileTask compileTask = JavaCompileTask.create(project);
         final Future<Boolean> compileFuture = executor.submit(compileTask);
 
         try {
             Boolean result = compileFuture.get();
-            unit.setSuccess(result);
-            compilationListener.notify(unit);
+            compilationListener.notify(new CompileEvent(this, result));
         } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
+            throw new OptimusRuntimeException(ex);
         } catch (ExecutionException ex) {
-            throw new RuntimeException(ex);
+            throw new OptimusRuntimeException(ex);
         }
     }
 

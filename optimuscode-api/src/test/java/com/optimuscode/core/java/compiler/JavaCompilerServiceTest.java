@@ -18,7 +18,7 @@ import com.optimuscode.core.common.compiler.CompilationListener;
 import com.optimuscode.core.common.compiler.CompilerService;
 import com.optimuscode.core.common.model.CompilationUnit;
 import com.optimuscode.core.common.model.Project;
-import com.optimuscode.core.java.model.JavaProject;
+import com.optimuscode.core.common.model.JavaProject;
 import com.optimuscode.core.utils.CommonUtils;
 import com.optimuscode.core.utils.SupportedLanguage;
 import org.apache.commons.io.FileUtils;
@@ -54,11 +54,11 @@ public class JavaCompilerServiceTest {
      */
     @Test
     public void testCompile() throws Exception {
-        String javaFileName = "../optimuscode-api/src/test/resources/TestSourceFile.txt";
+        String javaFileName = "./optimuscode-api/src/test/resources/TestSourceFile.txt";
         String className = "TestSourceFile";
         String fileContents = FileUtils.fileRead(javaFileName);
         CompilerService runner = JavaCompilerServiceImpl.create();
-        CompilationUnit unit = new CompilationUnit(this, SupportedLanguage.Java);
+        CompilationUnit unit = new CompilationUnit(SupportedLanguage.Java);
         unit.addSource(className, fileContents);
         project.setTestClassName(className);
         project.setUnit(unit);

@@ -4,7 +4,7 @@ import com.optimuscode.core.utils.SupportedLanguage;
 
 import java.util.*;
 
-public abstract class ProcessingUnit extends EventObject{
+public abstract class ProcessingUnit {
     protected static Map<SupportedLanguage, String> sourceExtension;
     static{
         sourceExtension = new HashMap<SupportedLanguage, String>();
@@ -16,8 +16,7 @@ public abstract class ProcessingUnit extends EventObject{
 
     List<String> errors;
 
-    public ProcessingUnit(Object source){
-        super(source);
+    public ProcessingUnit(){
         this.errors = new ArrayList<String>();
 
     }
