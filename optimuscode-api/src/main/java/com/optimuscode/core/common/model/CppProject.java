@@ -54,22 +54,19 @@ public class CppProject extends Project {
             }
             FileObject destination = fsManager.resolveFile(projectFolder,
                     gradleBuildFile);
-            writeBuildFile(destination, gradleBuildFile);
-            /*if (projectFolder.exists() && !destination.exists() &&
-                    projectFolder.getType() == FileType.FOLDER) {
-                destination.copyFrom(src, Selectors.SELECT_FILES);
-            }*/
+            writeBuildFile(destination);
+
             return this;
         } catch (FileSystemException e) {
             throw new OptimusRuntimeException(e);
         }
     }
 
-    private void writeBuildFile(final FileObject destination,
-                                final String buildFileName) throws FileSystemException {
+    private void writeBuildFile(final FileObject destination)
+                                            throws FileSystemException {
         final StringBuilder buildFileContents =
                 new StringBuilder("apply plugin: 'cpp'\n").
-                append("executables {\n").
+                append("libraries {\n").
                 append("\t").append(getClassName()).append("\n").append("}");
 
         FileWriter writer = null;

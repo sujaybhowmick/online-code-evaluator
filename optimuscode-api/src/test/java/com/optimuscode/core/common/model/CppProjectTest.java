@@ -41,8 +41,8 @@ public class CppProjectTest {
         project.open();
         assertTrue(project.exists());
         project.dumpSource();
-        //project.close();
-       // assertFalse(project.exists());
+        project.close();
+        assertFalse(project.exists());
 
     }
 }

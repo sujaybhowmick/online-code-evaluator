@@ -68,7 +68,7 @@ public class CppCompileTask implements Callable<Boolean> {
         ProjectConnection connection = connector.connect();
         BuildLauncher launcher = connection.newBuild();
 
-        launcher.forTasks(project.getClassName() + SUFFIX_EXCUTABLE);
+        launcher.forTasks(project.getClassName() + SUFFIX_LIBRARY);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         launcher.setStandardOutput(outputStream);
         launcher.setStandardError(outputStream);
@@ -94,8 +94,7 @@ public class CppCompileTask implements Callable<Boolean> {
     }
 
     private String[] prepareBuildArguments(Project project) {
-        return new String[]{ "-b=" + project.getBuildFile(),
-                            "-PcppExecutable=" + project.getClassName() };
+        return new String[]{ "-b=" + project.getBuildFile() };
     }
 }
 
